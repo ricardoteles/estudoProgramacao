@@ -2,6 +2,8 @@ package io.github.curso.msavaliadorcredito.controller;
 
 import io.github.curso.msavaliadorcredito.exception.DadosClienteNotFoundException;
 import io.github.curso.msavaliadorcredito.exception.ErroComunicacaoMicroserviceException;
+import io.github.curso.msavaliadorcredito.model.DadosAvaliacao;
+import io.github.curso.msavaliadorcredito.model.RetornoAvaliacaoCliente;
 import io.github.curso.msavaliadorcredito.model.SituacaoCliente;
 import io.github.curso.msavaliadorcredito.service.AvaliadorCreditoService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,15 @@ public class AvaliadorCreditoController {
     }
 
     @PostMapping
-    public ResponseEntity avaliacaoCliente(@RequestBody String cpf){
-        return ResponseEntity.ok("");
+    public ResponseEntity realizarAvaliacao(@RequestBody DadosAvaliacao dados){
+        try {
+            RetornoAvaliacaoCliente retornoAvaliacaoCliente = avaliadorCreditoService
+                    .realizarAvaliacao(dados.getCpf(), dados.getRenda());
+            return ResponseEntity.ok(retornoAvaliacaoCliente);
+        } catch (DadosClienteNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (ErroComunicacaoMicroserviceException e) {
+            return ResponseEntity.status(HttpStatus.resolve(e.getStatus())).body(e.getMessage());
+        }
     }
 }

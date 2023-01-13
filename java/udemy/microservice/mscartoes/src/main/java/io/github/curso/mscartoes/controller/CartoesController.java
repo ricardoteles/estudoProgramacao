@@ -35,7 +35,7 @@ public class CartoesController {
     }
 
     @GetMapping(params = "renda")
-    public ResponseEntity<List<Cartao>> getCartoesRendaAteh(@RequestParam("renda") Long renda){
+    public ResponseEntity<List<Cartao>> getCartoesRendaAteh(@RequestParam("renda") Long renda) {
         List<Cartao> lista = cartaoService.getCartoesRendaMenorIgual(renda);
 
         return ResponseEntity.ok(lista);
